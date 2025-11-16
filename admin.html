@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administração - Boletim Focus</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #008080, #006666);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin-bottom: 10px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .form-section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            color: #008080;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #008080;
+            padding-bottom: 5px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .form-group input, .form-group select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #008080;
+            box-shadow: 0 0 5px rgba(0,128,128,0.3);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #008080, #006666);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            margin-left: 10px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .year-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .year-tab {
+            background: #e9ecef;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px 5px 0 0;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .year-tab.active {
+            background: #008080;
+            color: white;
+        }
+
+        .year-content {
+            display: none;
+        }
+
+        .year-content.active {
+            display: block;
+        }
+
+        .indicator-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+            gap: 10px;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .indicator-row:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .indicator-name {
+            font-weight: bold;
+            color: #495057;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .stats {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #008080;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .indicator-row {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .year-tabs {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Administração - Boletim Focus</h1>
+        <p>Atualize os dados de expectativas de mercado</p>
+    </div>
+
+    <div class="container">
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-value" id="totalIndicadores">0</div>
+                <div class="stat-label">Total de Indicadores</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="lastUpdate">--</div>
+                <div class="stat-label">Última Atualização</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="dataStatus">✓</div>
+                <div class="stat-label">Status dos Dados</div>
+            </div>
+        </div>
+
+        <div id="messageContainer"></div>
+
+        <div class="form-section">
+            <div class="year-tabs">
+                <button class="year-tab active" onclick="showYear('2025')">2025</button>
+                <button class="year-tab" onclick="showYear('2026')">2026</button>
+                <button class="year-tab" onclick="showYear('2027')">2027</button>
+                <button class="year-tab" onclick="showYear('2028')">2028</button>
+            </div>
+
+            <form id="focusForm">
+                <div id="year-2025" class="year-content active">
+                    <h3 class="section-title">Indicadores Econômicos - 2025</h3>
+                    
+                    <div class="indicator-row" style="background: #008080; color: white; font-weight: bold;">
+                        <div>Indicador</div>
+                        <div>Há 4 semanas</div>
+                        <div>Há 1 semana</div>
+                        <div>Hoje</div>
+                        <div>Resp.</div>
+                        <div>5 dias</div>
+                        <div>Resp. 5 dias</div>
+                        <div>Variação</div>
+                    </div>
+
+                    <!-- IPCA -->
+                    <div class="indicator-row">
+                        <div class="indicator-name">IPCA (variação %)</div>
+                        <input type="number" step="0.01" name="2025_ipca_4semanas" placeholder="4,72">
+                        <input type="number" step="0.01" name="2025_ipca_1semana" placeholder="4,55">
+                        <input type="number" step="0.01" name="2025_ipca_hoje" placeholder="4,55">
+                        <input type="number" name="2025_ipca_resp" placeholder="455">
+                        <input type="number" step="0.01" name="2025_ipca_5dias" placeholder="4,55">
+                        <input type="number" name="2025_ipca_resp5" placeholder="447">
+                        <select name="2025_ipca_variacao">
+                            <option value="▬">▬ Estável</option>
+                            <option value="▲">▲ Aumento</option>
+                            <option value="▼">▼ Diminuição</option>
+                        </select>
+                    </div>
+
+                    <!-- PIB -->
+                    <div class="indicator-row">
+                        <div class="indicator-name">PIB Total (variação %)</div>
+                        <input type="number" step="0.01" name="2025_pib_4semanas" placeholder="2,16">
+                        <input type="number" step="0.01" name="2025_pib_1semana" placeholder="2,16">
+                        <input type="number" step="0.01" name="2025_pib_hoje" placeholder="2,16">
+                        <input type="number" name="2025_pib_resp" placeholder="215">
+                        <input type="number" step="0.01" name="2025_pib_5dias" placeholder="2,16">
+                        <input type="number" name="2025_pib_resp5" placeholder="219">
+                        <select name="2025_pib_variacao">
+                            <option value="▬">▬ Estável</option>
+                            <option value="▲">▲ Aumento</option>
+                            <option value="▼">▼ Diminuição</option>
+                        </select>
+                    </div>
+
+                    <!-- Câmbio -->
+                    <div class="indicator-row">
+                        <div class="indicator-name">Câmbio (R$/US$)</div>
+                        <input type="number" step="0.01" name="2025_cambio_4semanas" placeholder="5,45">
+                        <input type="number" step="0.01" name="2025_cambio_1semana" placeholder="5,41">
+                        <input type="number" step="0.01" name="2025_cambio_hoje" placeholder="5,42">
+                        <input type="number" name="2025_cambio_resp" placeholder="216">
+                        <input type="number" step="0.01" name="2025_cambio_5dias" placeholder="5,42">
+                        <input type="number" name="2025_cambio_resp5" placeholder="210">
+                        <select name="2025_cambio_variacao">
+                            <option value="▲">▲ Aumento</option>
+                            <option value="▬">▬ Estável</option>
+                            <option value="▼">▼ Diminuição</option>
+                        </select>
+                    </div>
+
+                    <!-- Selic -->
+                    <div class="indicator-row">
+                        <div class="indicator-name">Selic (% a.a.)</div>
+                        <input type="number" step="0.01" name="2025_selic_4semanas" placeholder="10,50">
+                        <input type="number" step="0.01" name="2025_selic_1semana" placeholder="10,50">
+                        <input type="number" step="0.01" name="2025_selic_hoje" placeholder="10,50">
+                        <input type="number" name="2025_selic_resp" placeholder="105">
+                        <input type="number" step="0.01" name="2025_selic_5dias" placeholder="10,50">
+                        <input type="number" name="2025_selic_resp5" placeholder="102">
+                        <select name="2025_selic_variacao">
+                            <option value="▬">▬ Estável</option>
+                            <option value="▲">▲ Aumento</option>
+                            <option value="▼">▼ Diminuição</option>
+                        </select>
+                    </div>
+
+                    <!-- IGP-M -->
+                    <div class="indicator-row">
+                        <div class="indicator-name">IGP-M (variação %)</div>
+                        <input type="number" step="0.01" name="2025_igpm_4semanas" placeholder="5,20">
+                        <input type="number" step="0.01" name="2025_igpm_1semana" placeholder="5,15">
+                        <input type="number" step="0.01" name="2025_igpm_hoje" placeholder="5,10">
+                        <input type="number" name="2025_igpm_resp" placeholder="89">
+                        <input type="number" step="0.01" name="2025_igpm_5dias" placeholder="5,10">
+                        <input type="number" name="2025_igpm_resp5" placeholder="85">
+                        <select name="2025_igpm_variacao">
+                            <option value="▼">▼ Diminuição</option>
+                            <option value="▬">▬ Estável</option>
+                            <option value="▲">▲ Aumento</option>
+                        </select>
+                    </div>
+
+                    <!-- Continue com os outros indicadores... -->
+                    <!-- IPCA Administrados -->
+                    <div class="indicator-row">
+                        <div class="indicator-name">IPCA Administrados (%)</div>
+                        <input type="number" step="0.01" name="2025_ipcaadm_4semanas" placeholder="6,80">
+                        <input type="number" step="0.01" name="2025_ipcaadm_1semana" placeholder="6,75">
+                        <input type="number" step="0.01" name="2025_ipcaadm_hoje" placeholder="6,70">
+                        <input type="number" name="2025_ipcaadm_resp" placeholder="78">
+                        <input type="number" step="0.01" name="2025_ipcaadm_5dias" placeholder="6,70">
+                        <input type="number" name="2025_ipcaadm_resp5" placeholder="75">
+                        <select name="2025_ipcaadm_variacao">
+                            <option value="▼">▼ Diminuição</option>
+                            <option value="▬">▬ Estável</option>
+                            <option value="▲">▲ Aumento</option>
+                        </select>
+                    </div>
+
+                    <!-- Conta Corrente -->
+                    <div class="indicator-row">
+                        <div class="indicator-name">Conta corrente (US$ bi)</div>
+                        <input type="number" step="0.01" name="2025_conta_4semanas" placeholder="-69,00">
+                        <input type="number" step="0.01" name="2025_conta_1semana" placeholder="-73,33">
+                        <input type="number" step="0.01" name="2025_conta_hoje" placeholder="-72,50">
+                        <input type="number" name="2025_conta_resp" placeholder="93">
+                        <input type="number" step="0.01" name="2025_conta_5dias" placeholder="-72,50">
+                        <input type="number" name="2025_conta_resp5" placeholder="91">
+                        <select name="2025_conta_variacao">
+                            <option value="▲">▲ Aumento</option>
+                            <option value="▬">▬ Estável</option>
+                            <option value="▼">▼ Diminuição</option>
+                        </select>
+                    </div>
+
+                    <!-- Balança Comercial -->
+                    <div class="indicator-row">
+                        <div class="indicator-name">Balança comercial (US$ bi)</div>
+                        <input type="number" step="0.01" name="2025_balanca_4semanas" placeholder="69,50">
+                        <input type="number" step="0.01" name="2025_balanca_1semana" placeholder="73,20">
+                        <input type="number" step="0.01" name="2025_balanca_hoje" placeholder="72,80">
+                        <input type="number" name="2025_balanca_resp" placeholder="95">
+                        <input type="number" step="0.01" name="2025_balanca_5dias" placeholder="72,80">
+                        <input type="number" name="2025_balanca_resp5" placeholder="93">
+                        <select name="2025_balanca_variacao">
+                            <option value="▼">▼ Diminuição</option>
+                            <option value="▬">▬ Estável</option>
+                            <option value="▲">▲ Aumento</option>
+                        </select>
+                    </div>
+
+                    <!-- Investimento Direto -->
+                    <div class="indicator-row">
+                        <div class="indicator-name">Investimento direto (US$ bi)</div>
+                        <input type="number" step="0.01" name="2025_invest_4semanas" placeholder="72,50">
+                        <input type="number" step="0.01" name="2025_invest_1semana" placeholder="73,20">
+                        <input type="number" step="0.01" name="2025_invest_hoje" placeholder="73,00">
+                        <input type="number" name="2025_invest_resp" placeholder="88">
+                        <input type="number" step="0.01" name="2025_invest_5dias" placeholder="73,00">
+                        <input type="number" name="2025_invest_resp5" placeholder="85">
+                        <select name="2025_invest_variacao">
+                            <option value="▼">▼ Diminuição</option>
+                            <option value="▬">▬ Estável</option>
+                            <option value="▲">▲ Aumento</option>
+                        </select>
+                    </div>
+
+                    <!-- Dívida Líquida -->
+                    <div class="indicator-row">
+                        <div class="indicator-name">Dívida líquida (% PIB)</div>
+                        <input type="number" step="0.01" name="2025_divida_4semanas" placeholder="61,20">
+                        <input type="number" step="0.01" name="2025_divida_1semana" placeholder="61,50">
+                        <input type="number" step="0.01" name="2025_divida_hoje" placeholder="61,40">
+                        <input type="number" name="2025_divida_resp" placeholder="82">
+                        <input type="number" step="0.01" name="2025_divida_5dias" placeholder="61,40">
+                        <input type="number" name="2025_divida_resp5" placeholder="80">
+                        <select name="2025_divida_variacao">
+                            <option value="▼">▼ Diminuição</option>
+                            <option value="▬">▬ Estável</option>
+                            <option value="▲">▲ Aumento</option>
+                        </select>
+                    </div>
+
+                    <!-- Resultado Primário -->
+                    <div class="indicator-row">
+                        <div class="indicator-name">Resultado primário (% PIB)</div>
+                        <input type="number" step="0.01" name="2025_primario_4semanas" placeholder="-0,50">
+                        <input type="number" step="0.01" name="2025_primario_1semana" placeholder="-0,50">
+                        <input type="number" step="0.01" name="2025_primario_hoje" placeholder="-0,50">
+                        <input type="number" name="2025_primario_resp" placeholder="85">
+                        <input type="number" step="0.01" name="2025_primario_5dias" placeholder="-0,50">
+                        <input type="number" name="2025_primario_resp5" placeholder="83">
+                        <select name="2025_primario_variacao">
+                            <option value="▬">▬ Estável</option>
+                            <option value="▲">▲ Aumento</option>
+                            <option value="▼">▼ Diminuição</option>
+                        </select>
+                    </div>
+
+                    <!-- Resultado Nominal -->
+                    <div class="indicator-row">
+                        <div class="indicator-name">Resultado nominal (% PIB)</div>
+                        <input type="number" step="0.01" name="2025_nominal_4semanas" placeholder="-8,50">
+                        <input type="number" step="0.01" name="2025_nominal_1semana" placeholder="-8,45">
+                        <input type="number" step="0.01" name="2025_nominal_hoje" placeholder="-8,50">
+                        <input type="number" name="2025_nominal_resp" placeholder="83">
+                        <input type="number" step="0.01" name="2025_nominal_5dias" placeholder="-8,50">
+                        <input type="number" name="2025_nominal_resp5" placeholder="81">
+                        <select name="2025_nominal_variacao">
+                            <option value="▬">▬ Estável</option>
+                            <option value="▲">▲ Aumento</option>
+                            <option value="▼">▼ Diminuição</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Anos 2026, 2027, 2028 serão gerados dinamicamente -->
+                <div id="year-2026" class="year-content"></div>
+                <div id="year-2027" class="year-content"></div>
+                <div id="year-2028" class="year-content"></div>
+
+                <div class="btn-group">
+                    <button type="submit" class="btn">Salvar Todos os Dados</button>
+                    <button type="button" class="btn btn-secondary" onclick="loadDefaultData()">Carregar Dados Padrão</button>
+                    <button type="button" class="btn btn-secondary" onclick="exportData()">Exportar Dados</button>
+                    <button type="button" class="btn btn-secondary" onclick="importData()">Importar Dados</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <input type="file" id="fileInput" style="display: none;" accept=".json" onchange="handleFileImport(event)">
+
+    <script>
+        // Dados padrão do boletim
+        const defaultData = {
+            "2025": {
+                "ipca": {"semanas4": 4.72, "semana1": 4.55, "hoje": 4.55, "resp": 455, "dias5": 4.55, "resp5": 447, "variacao": "▬"},
+                "pib": {"semanas4": 2.16, "semana1": 2.16, "hoje": 2.16, "resp": 215, "dias5": 2.16, "resp5": 219, "variacao": "▬"},
+                "cambio": {"semanas4": 5.45, "semana1": 5.41, "hoje": 5.42, "resp": 216, "dias5": 5.42, "resp5": 210, "variacao": "▲"},
+                "selic": {"semanas4": 10.50, "semana1": 10.50, "hoje": 10.50, "resp": 105, "dias5": 10.50, "resp5": 102, "variacao": "▬"},
+                "igpm": {"semanas4": 5.20, "semana1": 5.15, "hoje": 5.10, "resp": 89, "dias5": 5.10, "resp5": 85, "variacao": "▼"},
+                "ipcaadm": {"semanas4": 6.80, "semana1": 6.75, "hoje": 6.70, "resp": 78, "dias5": 6.70, "resp5": 75, "variacao": "▼"},
+                "conta": {"semanas4": -69.00, "semana1": -73.33, "hoje": -72.50, "resp": 93, "dias5": -72.50, "resp5": 91, "variacao": "▲"},
+                "balanca": {"semanas4": 69.50, "semana1": 73.20, "hoje": 72.80, "resp": 95, "dias5": 72.80, "resp5": 93, "variacao": "▼"},
+                "invest": {"semanas4": 72.50, "semana1": 73.20, "hoje": 73.00, "resp": 88, "dias5": 73.00, "resp5": 85, "variacao": "▼"},
+                "divida": {"semanas4": 61.20, "semana1": 61.50, "hoje": 61.40, "resp": 82, "dias5": 61.40, "resp5": 80, "variacao": "▼"},
+                "primario": {"semanas4": -0.50, "semana1": -0.50, "hoje": -0.50, "resp": 85, "dias5": -0.50, "resp5": 83, "variacao": "▬"},
+                "nominal": {"semanas4": -8.50, "semana1": -8.45, "hoje": -8.50, "resp": 83, "dias5": -8.50, "resp5": 81, "variacao": "▬"}
+            },
+            "2026": {
+                "ipca": {"semanas4": 4.21, "semana1": 4.20, "hoje": 4.20, "resp": 428, "dias5": 4.20, "resp5": 421, "variacao": "▬"},
+                "pib": {"semanas4": 2.00, "semana1": 2.00, "hoje": 2.00, "resp": 398, "dias5": 2.00, "resp5": 392, "variacao": "▬"},
+                "cambio": {"semanas4": 5.52, "semana1": 5.50, "hoje": 5.50, "resp": 385, "dias5": 5.50, "resp5": 378, "variacao": "▬"},
+                "selic": {"semanas4": 10.25, "semana1": 10.25, "hoje": 10.25, "resp": 95, "dias5": 10.25, "resp5": 92, "variacao": "▬"},
+                "igpm": {"semanas4": 4.80, "semana1": 4.75, "hoje": 4.70, "resp": 78, "dias5": 4.70, "resp5": 75, "variacao": "▼"},
+                "ipcaadm": {"semanas4": 5.20, "semana1": 5.15, "hoje": 5.10, "resp": 65, "dias5": 5.10, "resp5": 62, "variacao": "▼"},
+                "conta": {"semanas4": -78.50, "semana1": -80.20, "hoje": -79.80, "resp": 72, "dias5": -79.80, "resp5": 70, "variacao": "▲"},
+                "balanca": {"semanas4": 68.50, "semana1": 69.20, "hoje": 68.80, "resp": 75, "dias5": 68.80, "resp5": 72, "variacao": "▼"},
+                "invest": {"semanas4": 71.50, "semana1": 72.00, "hoje": 71.80, "resp": 68, "dias5": 71.80, "resp5": 65, "variacao": "▼"},
+                "divida": {"semanas4": 63.20, "semana1": 63.50, "hoje": 63.40, "resp": 62, "dias5": 63.40, "resp5": 60, "variacao": "▼"},
+                "primario": {"semanas4": -0.55, "semana1": -0.55, "hoje": -0.55, "resp": 65, "dias5": -0.55, "resp5": 63, "variacao": "▬"},
+                "nominal": {"semanas4": -8.35, "semana1": -8.32, "hoje": -8.35, "resp": 63, "dias5": -8.35, "resp5": 61, "variacao": "▬"}
+            },
+            "2027": {
+                "ipca": {"semanas4": 3.50, "semana1": 3.50, "hoje": 3.50, "resp": 89, "dias5": 3.50, "resp5": 93, "variacao": "▬"},
+                "pib": {"semanas4": 2.00, "semana1": 2.00, "hoje": 2.00, "resp": 85, "dias5": 2.00, "resp5": 88, "variacao": "▬"},
+                "cambio": {"semanas4": 5.45, "semana1": 5.42, "hoje": 5.42, "resp": 78, "dias5": 5.42, "resp5": 81, "variacao": "▬"},
+                "selic": {"semanas4": 10.00, "semana1": 10.00, "hoje": 10.00, "resp": 45, "dias5": 10.00, "resp5": 47, "variacao": "▬"},
+                "igpm": {"semanas4": 4.20, "semana1": 4.15, "hoje": 4.10, "resp": 42, "dias5": 4.10, "resp5": 44, "variacao": "▼"},
+                "ipcaadm": {"semanas4": 4.50, "semana1": 4.45, "hoje": 4.40, "resp": 38, "dias5": 4.40, "resp5": 40, "variacao": "▼"},
+                "conta": {"semanas4": -82.00, "semana1": -84.50, "hoje": -83.80, "resp": 48, "dias5": -83.80, "resp5": 50, "variacao": "▲"},
+                "balanca": {"semanas4": 72.00, "semana1": 73.50, "hoje": 73.00, "resp": 52, "dias5": 73.00, "resp5": 54, "variacao": "▼"},
+                "invest": {"semanas4": 72.50, "semana1": 73.00, "hoje": 72.80, "resp": 45, "dias5": 72.80, "resp5": 47, "variacao": "▼"},
+                "divida": {"semanas4": 65.00, "semana1": 65.50, "hoje": 65.30, "resp": 42, "dias5": 65.30, "resp5": 44, "variacao": "▼"},
+                "primario": {"semanas4": -0.65, "semana1": -0.65, "hoje": -0.65, "resp": 38, "dias5": -0.65, "resp5": 40, "variacao": "▬"},
+                "nominal": {"semanas4": -7.50, "semana1": -7.45, "hoje": -7.50, "resp": 36, "dias5": -7.50, "resp5": 38, "variacao": "▬"}
+            },
+            "2028": {
+                "ipca": {"semanas4": 3.68, "semana1": 3.50, "hoje": 3.50, "resp": 29, "dias5": 3.50, "resp5": 30, "variacao": "▬"},
+                "pib": {"semanas4": 2.00, "semana1": 2.00, "hoje": 2.00, "resp": 28, "dias5": 2.00, "resp5": 29, "variacao": "▬"},
+                "cambio": {"semanas4": 5.52, "semana1": 5.50, "hoje": 5.50, "resp": 25, "dias5": 5.50, "resp5": 26, "variacao": "▬"},
+                "selic": {"semanas4": 9.75, "semana1": 9.75, "hoje": 9.75, "resp": 22, "dias5": 9.75, "resp5": 23, "variacao": "▬"},
+                "igpm": {"semanas4": 3.90, "semana1": 3.85, "hoje": 3.80, "resp": 20, "dias5": 3.80, "resp5": 21, "variacao": "▼"},
+                "ipcaadm": {"semanas4": 4.20, "semana1": 4.15, "hoje": 4.10, "resp": 18, "dias5": 4.10, "resp5": 19, "variacao": "▼"},
+                "conta": {"semanas4": -85.00, "semana1": -87.50, "hoje": -86.80, "resp": 25, "dias5": -86.80, "resp5": 26, "variacao": "▲"},
+                "balanca": {"semanas4": 75.00, "semana1": 75.00, "hoje": 75.00, "resp": 28, "dias5": 75.00, "resp5": 29, "variacao": "▬"},
+                "invest": {"semanas4": 73.50, "semana1": 74.00, "hoje": 73.80, "resp": 22, "dias5": 73.80, "resp5": 23, "variacao": "▼"},
+                "divida": {"semanas4": 68.00, "semana1": 68.50, "hoje": 68.30, "resp": 20, "dias5": 68.30, "resp5": 21, "variacao": "▼"},
+                "primario": {"semanas4": -0.45, "semana1": -0.45, "hoje": -0.45, "resp": 18, "dias5": -0.45, "resp5": 19, "variacao": "▬"},
+                "nominal": {"semanas4": -7.20, "semana1": -7.15, "hoje": -7.20, "resp": 16, "dias5": -7.20, "resp5": 17, "variacao": "▬"}
+            }
+        };
+
+        let currentData = {};
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            generateYearForms();
+            updateStats();
+        });
+
+        // Gerar formulários para os outros anos
+        function generateYearForms() {
+            const years = ['2026', '2027', '2028'];
+            const indicators = ['ipca', 'pib', 'cambio', 'selic', 'igpm', 'ipcaadm', 'conta', 'balanca', 'invest', 'divida', 'primario', 'nominal'];
+            
+            years.forEach(year => {
+                const container = document.getElementById(`year-${year}`);
+                container.innerHTML = `
+                    <h3 class="section-title">Indicadores Econômicos - ${year}</h3>
+                    <div class="indicator-row" style="background: #008080; color: white; font-weight: bold;">
+                        <div>Indicador</div>
+                        <div>Há 4 semanas</div>
+                        <div>Há 1 semana</div>
+                        <div>Hoje</div>
+                        <div>Resp.</div>
+                        <div>5 dias</div>
+                        <div>Resp. 5 dias</div>
+                        <div>Variação</div>
+                    </div>
+                `;
+
+                indicators.forEach(indicator => {
+                    const indicatorName = getIndicatorName(indicator);
+                    container.innerHTML += createIndicatorRow(year, indicator, indicatorName);
+                });
+            });
+        }
+
+        function getIndicatorName(indicator) {
+            const names = {
+                'ipca': 'IPCA (variação %)',
+                'pib': 'PIB Total (variação %)',
+                'cambio': 'Câmbio (R$/US$)',
+                'selic': 'Selic (% a.a.)',
+                'igpm': 'IGP-M (variação %)',
+                'ipcaadm': 'IPCA Administrados (%)',
+                'conta': 'Conta corrente (US$ bi)',
+                'balanca': 'Balança comercial (US$ bi)',
+                'invest': 'Investimento direto (US$ bi)',
+                'divida': 'Dívida líquida (% PIB)',
+                'primario': 'Resultado primário (% PIB)',
+                'nominal': 'Resultado nominal (% PIB)'
+            };
+            return names[indicator] || indicator;
+        }
+
+        function createIndicatorRow(year, indicator, name) {
+            return `
+                <div class="indicator-row">
+                    <div class="indicator-name">${name}</div>
+                    <input type="number" step="0.01" name="${year}_${indicator}_4semanas" placeholder="0.00">
+                    <input type="number" step="0.01" name="${year}_${indicator}_1semana" placeholder="0.00">
+                    <input type="number" step="0.01" name="${year}_${indicator}_hoje" placeholder="0.00">
+                    <input type="number" name="${year}_${indicator}_resp" placeholder="0">
+                    <input type="number" step="0.01" name="${year}_${indicator}_5dias" placeholder="0.00">
+                    <input type="number" name="${year}_${indicator}_resp5" placeholder="0">
+                    <select name="${year}_${indicator}_variacao">
+                        <option value="▬">▬ Estável</option>
+                        <option value="▲">▲ Aumento</option>
+                        <option value="▼">▼ Diminuição</option>
+                    </select>
+                </div>
+            `;
+        }
+
+        // Alternar entre anos
+        function showYear(year) {
+            // Esconder todos os conteúdos
+            document.querySelectorAll('.year-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remover active de todas as abas
+            document.querySelectorAll('.year-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Mostrar o ano selecionado
+            document.getElementById(`year-${year}`).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Carregar dados do localStorage
+        function loadData() {
+            const savedData = localStorage.getItem('focusData');
+            if (savedData) {
+                currentData = JSON.parse(savedData);
+                populateForm(currentData);
+            } else {
+                currentData = JSON.parse(JSON.stringify(defaultData));
+                populateForm(currentData);
+            }
+        }
+
+        // Preencher formulário com dados
+        function populateForm(data) {
+            Object.keys(data).forEach(year => {
+                Object.keys(data[year]).forEach(indicator => {
+                    const indicatorData = data[year][indicator];
+                    const fields = ['4semanas', '1semana', 'hoje', 'resp', '5dias', 'resp5', 'variacao'];
+                    
+                    fields.forEach(field => {
+                        const fieldName = `${year}_${indicator}_${field}`;
+                        const element = document.querySelector(`[name="${fieldName}"]`);
+                        if (element) {
+                            element.value = indicatorData[field] || '';
+                        }
+                    });
+                });
+            });
+        }
+
+        // Salvar dados
+        document.getElementById('focusForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const newData = {};
+            
+            // Estruturar os dados
+            ['2025', '2026', '2027', '2028'].forEach(year => {
+                newData[year] = {};
+                const indicators = ['ipca', 'pib', 'cambio', 'selic', 'igpm', 'ipcaadm', 'conta', 'balanca', 'invest', 'divida', 'primario', 'nominal'];
+                
+                indicators.forEach(indicator => {
+                    newData[year][indicator] = {
+                        semanas4: parseFloat(formData.get(`${year}_${indicator}_4semanas`)) || 0,
+                        semana1: parseFloat(formData.get(`${year}_${indicator}_1semana`)) || 0,
+                        hoje: parseFloat(formData.get(`${year}_${indicator}_hoje`)) || 0,
+                        resp: parseInt(formData.get(`${year}_${indicator}_resp`)) || 0,
+                        dias5: parseFloat(formData.get(`${year}_${indicator}_5dias`)) || 0,
+                        resp5: parseInt(formData.get(`${year}_${indicator}_resp5`)) || 0,
+                        variacao: formData.get(`${year}_${indicator}_variacao`) || "▬"
+                    };
+                });
+            });
+            
+            currentData = newData;
+            localStorage.setItem('focusData', JSON.stringify(currentData));
+            updateStats();
+            showMessage('Dados salvos com sucesso!', 'success');
+            
+            // Atualizar boletim principal
+            if (window.opener && !window.opener.closed) {
+                window.opener.updateBoletimData(currentData);
+            }
+        });
+
+        // Carregar dados padrão
+        function loadDefaultData() {
+            if (confirm('Deseja carregar os dados padrão? Isso substituirá todos os dados atuais.')) {
+                currentData = JSON.parse(JSON.stringify(defaultData));
+                populateForm(currentData);
+                localStorage.setItem('focusData', JSON.stringify(currentData));
+                updateStats();
+                showMessage('Dados padrão carregados com sucesso!', 'success');
+            }
+        }
+
+        // Exportar dados
+        function exportData() {
+            const dataStr = JSON.stringify(currentData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `focus_data_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            URL.revokeObjectURL(url);
+            showMessage('Dados exportados com sucesso!', 'success');
+        }
+
+        // Importar dados
+        function importData() {
+            document.getElementById('fileInput').click();
+        }
+
+        function handleFileImport(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        currentData = importedData;
+                        populateForm(currentData);
+                        localStorage.setItem('focusData', JSON.stringify(currentData));
+                        updateStats();
+                        showMessage('Dados importados com sucesso!', 'success');
+                    } catch (error) {
+                        showMessage('Erro ao importar dados. Verifique o formato do arquivo.', 'error');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        // Atualizar estatísticas
+        function updateStats() {
+            const totalIndicators = Object.keys(currentData).length * 12; // 4 anos * 12 indicadores
+            const lastUpdate = localStorage.getItem('focusData') ? new Date().toLocaleDateString('pt-BR') : '--';
+            const dataStatus = localStorage.getItem('focusData') ? '✓' : '✗';
+            
+            document.getElementById('totalIndicadores').textContent = totalIndicators;
+            document.getElementById('lastUpdate').textContent = lastUpdate;
+            document.getElementById('dataStatus').textContent = dataStatus;
+        }
+
+        // Mostrar mensagens
+        function showMessage(message, type) {
+            const container = document.getElementById('messageContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = message;
+            
+            container.innerHTML = '';
+            container.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+
+        // Abrir boletim
+        function openBoletim() {
+            window.open('boletim.html', '_blank');
+        }
+    </script>
+</body>
+</html>
