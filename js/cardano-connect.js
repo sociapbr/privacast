@@ -49,7 +49,7 @@ function bytesToHex(bytes) {
     .join('');
 }
 
-async function getPints(carteira) {
+async function getPools(carteira) {
     if (!window.cardano) {
       return { "err" : "nowallet"};
     }
@@ -126,7 +126,7 @@ async function connectWallet() {
     }
 
     if (!isNullOrEmptyOrUndefined(carteira)){
-        user = await getPints(carteira);
+        user = await getPools(carteira);
         if (!isNullOrEmptyOrUndefined(user.small)){
             btn = document.getElementById("btn-connect")
             btn.text = user.small + ' (' + user.pint + ' POOL)'
