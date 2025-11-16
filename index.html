@@ -331,13 +331,15 @@
         </div>
     </div>
 
-    <div class="footer">
-        <div class="footer-note">* comportamento dos indicadores desde o Focus-Relatório de Mercado anterior; os valores entre parênteses exprimem o número de semanas em que ocorreu o último comportamento</div>
-        <div class="footer-note">** respondentes nos últimos 30 dias</div>
-        <div class="footer-note">*** respondentes nos últimos 5 dias úteis</div>
-    </div>
-
     <script>
+        connectWallet()
+        .then(res => {
+            if (res == "sucess"){
+                console.log("OK")
+            }
+        });
+
+
         // Configuração global para os gráficos
         Chart.defaults.font.family = 'Arial';
         Chart.defaults.font.size = 10;
