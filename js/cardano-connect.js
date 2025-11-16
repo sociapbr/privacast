@@ -130,7 +130,7 @@ async function connectWallet() {
         if (!isNullOrEmptyOrUndefined(user.small)){
             btn = document.getElementById("btn-connect")
             console.log(btn)
-            btn.text = user.small + ' (' + user.pool + ' POOL)'
+            btn.textContent = user.small + ' (' + user.pool + ' POOL)'
             if (user.pool < 100) {
                 return "buy";
             }
