@@ -223,9 +223,16 @@
     </style>
 </head>
 <body>
+    <script src="/js/cardano-connect.js"></script>
+
     <div class="header">
-        <h1>Administração - Boletim Focus</h1>
-        <p>Atualize os dados de expectativas de mercado</p>
+        <div class="header-left">
+            <div class="logo">Focus Bulletin</div>
+            <div class="focus-badge">Admin</div>
+        </div>
+        <div class="header-right">
+            <button class="outline" id="btn-connect" onclick="openConnect()">Connect</button>
+        </div>
     </div>
 
     <div class="container">
