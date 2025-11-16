@@ -127,6 +127,7 @@ async function connectWallet() {
 
     if (!isNullOrEmptyOrUndefined(carteira)){
         user = await getPools(carteira);
+        console.log(user);
         if (!isNullOrEmptyOrUndefined(user.small)){
             btn = document.getElementById("btn-connect")
             btn.text = user.small + ' (' + user.pool + ' POOL)'

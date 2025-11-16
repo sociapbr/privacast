@@ -313,7 +313,7 @@
             </div>
             <div class="header-actions">
                 <button class="outline" id="btn-connect" onclick="openConnect()">Connect</button>
-                <button class="outline" id="btnAdmin" onclick="openAdmin()" style="display: none;">Admin</button>
+                <button class="outline" id="btn-admin" onclick="openAdmin()" style="display: none;">Admin</button>
             </div>
         </div>
     </div>
@@ -335,7 +335,8 @@
         connectWallet()
         .then(res => {
             if (res == "sucess"){
-                console.log("OK")
+                btn = document.getElementById("btn-admin")
+                btn.style.display = "";
             }
         });
 
