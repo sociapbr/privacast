@@ -298,8 +298,22 @@
             <div class="focus-badge">Report</div>
         </div>
         <div class="header-right">
-            <button class="outline" id="btnConnect" onclick="openConnect()">Connect</button>
-            <button class="outline" id="btnAdmin" onclick="openAdmin()" style="display: none;">Admin</button>
+            <div class="date" id="currentDate">7 de novembro de 2025</div>
+            <div class="legend">
+                <div class="legend-item">
+                    <span>▲</span> Aumento
+                </div>
+                <div class="legend-item">
+                    <span>▼</span> Diminuição
+                </div>
+                <div class="legend-item">
+                    <span>▬</span> Estabilidade
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="outline" onclick="openConnect()">Connect</button>
+                <button class="outline" id="btnAdmin" onclick="openAdmin()" style="display: none;">Admin</button>
+            </div>
         </div>
     </div>
 
@@ -319,6 +333,14 @@
             <!-- Os gráficos serão gerados dinamicamente aqui -->
         </div>
     </div>
+
+    <div class="footer">
+        <div class="footer-note">* comportamento dos indicadores desde o Focus-Relatório de Mercado anterior; os valores entre parênteses exprimem o número de semanas em que ocorreu o último comportamento</div>
+        <div class="footer-note">** respondentes nos últimos 30 dias</div>
+        <div class="footer-note">*** respondentes nos últimos 5 dias úteis</div>
+    </div>
+
+    <button class="admin-button" onclick="openAdmin()">Admin</button>
 
     <script>
         // Configuração global para os gráficos
@@ -428,6 +450,9 @@
                                 <th>Há 1 semana</th>
                                 <th>Hoje (Comp. semanal)</th>
                                 <th>Resp.</th>
+                                <th>5 dias</th>
+                                <th>Resp. 5 dias</th>
+                                <th>Comp. semanal</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -444,6 +469,9 @@
                         <td class="${valueClass}">${formatNumber(indicatorData.semana1)}</td>
                         <td class="${valueClass}">${formatNumber(indicatorData.hoje)} <span class="indicator">${indicatorData.variacao}</span></td>
                         <td class="respondents">${indicatorData.resp}</td>
+                        <td class="${valueClass}">${formatNumber(indicatorData.dias5)}</td>
+                        <td class="respondents">${indicatorData.resp5}</td>
+                        <td><span class="indicator">${indicatorData.variacao}</span></td>
                     </tr>
                 `;
             });
