@@ -339,13 +339,15 @@
     </div>
 
     <script>
-        connectWallet()
-        .then(res => {
-            if (res == "sucess"){
-                btn = document.getElementById("btn-admin")
-                btn.style.display = "";
-            }
-        });
+        window.onload = (event) => {
+            connectWallet()
+            .then(res => {
+                if (res == "sucess"){
+                    btn = document.getElementById("btn-admin")
+                    btn.style.display = "";
+                }
+            });
+        };
 
 
         // Configuração global para os gráficos
