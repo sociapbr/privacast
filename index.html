@@ -310,6 +310,7 @@
             <div class="header-actions">
                 <button class="outline" id="btn-connect" onclick="openConnect()">Connect</button>
                 <button class="outline" id="btn-admin" onclick="openAdmin()" style="display: none;">Admin</button>
+                <button class="outline" id="btn-buy" onclick="openBuy()" style="display: none;">Buy</button>
             </div>
         </div>
     </div>
@@ -333,8 +334,10 @@
             .then(res => {
                 console.log(res);
                 if (res == "success"){
-                    console.log("OK");
                     btn = document.getElementById("btn-admin")
+                    btn.style.display = "";
+                }else if (res == "buy"){
+                    btn = document.getElementById("btn-buy")
                     btn.style.display = "";
                 }
             });
@@ -580,6 +583,10 @@
         }
 
         // Função para abrir a página de administração
+        function openAdmin() {
+            window.location.href = "/admin.html"
+        }
+
         function openAdmin() {
             window.open('admin.html', '_blank');
         }
