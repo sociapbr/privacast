@@ -415,13 +415,6 @@
             }
         }
 
-        // Função para atualizar a data atual
-        function updateDate() {
-            const now = new Date();
-            const options = { day: 'numeric', month: 'long', year: 'numeric' };
-            document.getElementById('currentDate').textContent = now.toLocaleDateString('pt-BR', options);
-        }
-
         // Função para criar tabela HTML
         function createTable(year, data) {
             const indicators = [
@@ -597,7 +590,6 @@
         // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
             loadData();
-            updateDate();
             renderContent();
             
             // Esconder mensagem de loading e mostrar conteúdo
