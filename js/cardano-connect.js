@@ -89,22 +89,22 @@ async function getPools(carteira) {
     for (let i = 0; i < policies.len(); i++) {
         const policyIdBytes = policies.get(i);
         const policyId = bytesToHex(policyIdBytes.to_bytes());
-        if (policyId == "7e7dbfe44b4145a2f994a9c649ce84a3ee0706f06e9ec82360e0f642"){
+        if (policyId == "18079d745539795412bfef172cb204b6750404924638f3780bd212ec"){
             const listAssets = multiAsset.get(policyIdBytes);
             for (let j = 0; j < listAssets.len(); j++) {
                 const assetNameBytes = listAssets.keys();
                 for (let c = 0; c < assetNameBytes.len(); c++) {
                     const assetNameBin = assetNameBytes.get(c);
                     const assetName = bytesToHex(assetNameBin.name());
-                    if (assetName == "50494e54") {
+                    if (assetName == "0014df10504f4f4c") {
                         const quantity = listAssets.get(assetNameBin).to_str(); // string
-                        return { "small" : createSmall(address), "address" : address, "ada" : lovelaces, "pint" : quantity};
+                        return { "small" : createSmall(address), "address" : address, "ada" : lovelaces, "pool" : quantity};
                     }
                 };
             }
         }
     }
-    return { "small" : createSmall(address), "address" : address, "ada" : lovelaces, "pint" : 0};
+    return { "small" : createSmall(address), "address" : address, "ada" : lovelaces, "pool" : 0};
 }
 
 function createSmall(address){
@@ -129,8 +129,8 @@ async function connectWallet() {
         user = await getPools(carteira);
         if (!isNullOrEmptyOrUndefined(user.small)){
             btn = document.getElementById("btn-connect")
-            btn.text = user.small + ' (' + user.pint + ' POOL)'
-            if (user.pint < 100) {
+            btn.text = user.small + ' (' + user.pool + ' POOL)'
+            if (user.pool < 100) {
                 return "buy";
             }
             return "success";
