@@ -342,6 +342,7 @@
         window.onload = (event) => {
             connectWallet()
             .then(res => {
+                console.log(res);
                 if (res == "sucess"){
                     btn = document.getElementById("btn-admin")
                     btn.style.display = "";
