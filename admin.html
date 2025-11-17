@@ -498,12 +498,9 @@
             connectWallet()
             .then(res => {
                 console.log(res);
-//            if (res == "fail"){
-  //              window.location.href = "/connect-wallet.html"
-    //        }
-      //      if (res == "buy"){
-        //        window.location.href = "/buy-pint.html"
-         //  }
+                if (res !== "success"){
+                    window.location.href = "/notpermited.html"
+                }
             });
         }
 
