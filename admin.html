@@ -494,16 +494,18 @@
     <input type="file" id="fileInput" style="display: none;" accept=".json" onchange="handleFileImport(event)">
 
     <script>
-        connectWallet()
-        .then(res => {
-            console.log(res)
+        window.onload = (event) => {
+            connectWallet()
+            .then(res => {
+                console.log(res);
 //            if (res == "fail"){
   //              window.location.href = "/connect-wallet.html"
     //        }
       //      if (res == "buy"){
         //        window.location.href = "/buy-pint.html"
          //  }
-        });
+            });
+        }
 
         // Dados padrão do boletim
         const defaultData = {
