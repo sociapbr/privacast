@@ -496,12 +496,13 @@
     <script>
         connectWallet()
         .then(res => {
-            if (res == "fail"){
-                window.location.href = "/connect-wallet.html"
-            }
-            if (res == "buy"){
-                window.location.href = "/buy-pint.html"
-           }
+            fmt.Println(res)
+//            if (res == "fail"){
+  //              window.location.href = "/connect-wallet.html"
+    //        }
+      //      if (res == "buy"){
+        //        window.location.href = "/buy-pint.html"
+          // }
         });
 
         // Dados padrão do boletim
