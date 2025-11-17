@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Midnight Network Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+        
+        .container {
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .login-button {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+        
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+        }
+        
+        .login-button:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        
+        .status.success {
+            background: rgba(46, 204, 113, 0.3);
+            border: 1px solid #2ecc71;
+        }
+        
+        .status.error {
+            background: rgba(231, 76, 60, 0.3);
+            border: 1px solid #e74c3c;
+        }
+        
+        .status.info {
+            background: rgba(52, 152, 219, 0.3);
+            border: 1px solid #3498db;
+        }
+        
+        .wallet-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            text-align: left;
+        }
+        
+        .wallet-info h3 {
+            margin-top: 0;
+            color: #f39c12;
+        }
+        
+        .wallet-info p {
+            margin: 5px 0;
+            word-break: break-all;
+        }
+
+        /* Estilos para o Contrato Inteligente */
+        .contract-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .contract-section h3 {
+            margin-top: 0;
+            color: #f1c40f;
+            font-size: 1.4em;
+        }
+
+        .message-input-container {
+            margin: 20px 0;
+        }
+
+        #messageInput {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        #messageInput::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        #messageInput:focus {
+            outline: none;
+            border-color: #3498db;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .character-count {
+            text-align: right;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 5px;
+        }
+
+        .contract-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .contract-button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .save-button {
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            color: white;
+        }
+
+        .save-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+        }
+
+        .retrieve-button {
+            background: linear-gradient(45deg, #8e44ad, #9b59b6);
+            color: white;
+        }
+
+        .retrieve-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(155, 89, 182, 0.4);
+        }
+
+        .contract-button:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .message-status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .saved-message {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid #f39c12;
+            text-align: left;
+        }
+
+        .saved-message h4 {
+            margin-top: 0;
+            color: #f39c12;
+        }
+
+        .saved-message p {
+            margin: 10px 0;
+            word-break: break-word;
+            white-space: pre-wrap;
+        }
+
+        .saved-message small {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌙 Midnight Network</h1>
+        <p>Conecte-se à Midnight Network com sua carteira</p>
+        
+        <button id="loginButton" class="login-button" onclick="connectToMidnight()">
+            Conectar Carteira
+        </button>
+        
+        <div id="status" class="status" style="display: none;"></div>
+        
+        <div id="walletInfo" class="wallet-info" style="display: none;">
+            <h3>📊 Informações da Carteira</h3>
+            <p><strong>Endereço:</strong> <span id="walletAddress"></span></p>
+            <p><strong>ID da Rede:</strong> <span id="networkId"></span></p>
+            <p><strong>Status:</strong> <span id="connectionStatus"></span></p>
+        </div>
+        
+        <!-- Seção do Contrato Inteligente -->
+        <div id="contractSection" class="contract-section" style="display: none;">
+            <h3>📝 Contrato Inteligente</h3>
+            <p>Salve sua mensagem privada na blockchain</p>
+            
+            <div class="message-input-container">
+                <textarea id="messageInput" placeholder="Digite sua mensagem privada aqui..." 
+                         maxlength="1000" rows="4"></textarea>
+                <div class="character-count">
+                    <span id="charCount">0</span>/1000 caracteres
+                </div>
+            </div>
+            
+            <div class="contract-buttons">
+                <button id="saveMessageBtn" class="contract-button save-button" onclick="saveMessageToContract()">
+                    💾 Salvar Mensagem
+                </button>
+                <button id="retrieveMessageBtn" class="contract-button retrieve-button" onclick="retrieveMessageFromContract()">
+                    📖 Resgatar Mensagem
+                </button>
+            </div>
+            
+            <div id="messageStatus" class="message-status" style="display: none;"></div>
+            <div id="savedMessage" class="saved-message" style="display: none;">
+                <h4>Sua Mensagem Salva:</h4>
+                <p id="retrievedMessageContent"></p>
+                <small id="messageTimestamp"></small>
+            </div>
+        </div>
+    </div>
+
+    <script src="midnight-login.js"></script>
+    <script src="midnight-contract.js"></script>
+</body>
+</html>
