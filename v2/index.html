@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Meu DApp Midnight</title>
+  <script type="module">
+    // Importe as bibliotecas Midnight (CDN ou npm + bundler)
+    import { WalletProvider, Contract } from 'https://cdn.jsdelivr.net/npm/@midnight/midnight-js/dist/index.js';
+    // Importe a API gerada pelo seu contrato (coloca na mesma pasta ou host)
+    import { CounterContract } from './CounterContract.js';  
+
+    let contract;
+    let provider;
+
+    async function connectWallet() {
+      provider = await WalletProvider.lace(); // Usa Lace Wallet
+      await provider.enable();
+      document.getElementById('status').innerText = 'Wallet conectada!';
+      
+      // Carrega ou deploya o contrato
+      contract = new CounterContract(provider, { network: 'testnet' });
+      if (!await contract.isDeployed()) {
+        await contract.deploy(); // Deploya o contrato
+        document.getElementById('status').innerText += ' Contrato deployado!';
+      }
+    }
+
+    async function increment() {
+      const by = parseInt(document.getElementById('amount').value);
+      // Gera prova ZK localmente (proof server precisa estar rodando)
+      const tx = await contract.increment(by);
+      await tx.submit(); // Envia para a blockchain
+      document.getElementById('value').innerText = await contract.value();
+    }
+
+    async function loadValue() {
+      document.getElementById('value').innerText = await contract.value();
+    }
+  </script>
+</head>
+<body>
+  <h1>Contador na Midnight Blockchain</h1>
+  <button onclick="connectWallet()">Conectar Lace Wallet</button>
+  <p id="status">Status: desconectado</p>
+  <hr>
+  <input id="amount" type="number" placeholder="Quanto incrementar?" value="1">
+  <button onclick="increment()">Incrementar</button>
+  <button onclick="loadValue()">Atualizar valor</button>
+  <h2>Valor atual: <span id="value">?</span></h2>
+
+  <!-- Rode o proof server localmente com Docker -->
+  <p>Rode: <code>docker run midnightnetwork/proof-server</code></p>
+</body>
+</html>
