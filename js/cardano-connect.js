@@ -82,7 +82,7 @@ async function getPools(carteira) {
     const multiAsset = balance.multiasset();
     if (!multiAsset) {
       console.log("Sem multiassets.");
-      return { "small" : createSmall(address), "address" : address, "ada" : lovelaces, "pint" : 0};
+      return { "small" : createSmall(address), "address" : address, "ada" : lovelaces, "pool" : 0};
     }
 
     const policies = multiAsset.keys();
@@ -98,9 +98,9 @@ async function getPools(carteira) {
                     const assetName = bytesToHex(assetNameBin.name());
                     if (assetName == "0014df10504f4f4c") {
                         const quantity = listAssets.get(assetNameBin).to_str(); // string
-                        if (quantity == "undefined") {
-                             quantity = 0
-                        }
+//                        if (quantity == "undefined") {
+//                           quantity = 0
+//                        }
                         return { "small" : createSmall(address), "address" : address, "ada" : lovelaces, "pool" : quantity};
                     }
                 };
