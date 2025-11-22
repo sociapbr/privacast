@@ -285,10 +285,15 @@
 
     <script type="module">
         async function nWallet() {
+            const walletBuilder = await import("https://cdn.jsdelivr.net/npm/@midnight-ntwrk/wallet@5.0.0/midnight_zswap_wasm_bg.min.js");
             const nativeToken = await import("https://cdn.jsdelivr.net/npm/@midnight-ntwrk/zswap@4.0.0/midnight_zswap_wasm_bg.min.js");
-            night = await midnight.mnLace.enable();
+            api = await midnight.mnLace.enable();
             console.log("nativeToken:", nativeToken);
-            console.log(night);
+            console.log(api);
+            console.log(walletBuilder);
+
+            const transaction = [{}];
+            const balancedAndProven = await api.balanceAndProveTransaction(transaction);
         }
 
         window.onload = (event) => {
