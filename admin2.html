@@ -287,6 +287,7 @@
         async function nWallet() {
             const nativeToken = await import("https://cdn.jsdelivr.net/npm/@midnight-ntwrk/zswap@4.0.0/midnight_zswap_wasm_bg.min.js");
             night = await midnight.mnLace.enable();
+            console.log("nativeToken:", nativeToken);
             console.log(night);
         }
 
@@ -294,7 +295,6 @@
             connectWallet()
             .then(res => {
                 console.log(res);
-                console.log("nativeToken:", nativeToken);
                 nWallet();
 //                if (res !== "success"){
 //                    window.location.href = "/notpermited.html"
