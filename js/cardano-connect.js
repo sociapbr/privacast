@@ -98,6 +98,9 @@ async function getPools(carteira) {
                     const assetName = bytesToHex(assetNameBin.name());
                     if (assetName == "0014df10504f4f4c") {
                         const quantity = listAssets.get(assetNameBin).to_str(); // string
+                        if (quantity == "undefined") {
+                             quantity = 0
+                        }
                         return { "small" : createSmall(address), "address" : address, "ada" : lovelaces, "pool" : quantity};
                     }
                 };
