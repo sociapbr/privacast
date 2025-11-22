@@ -298,6 +298,36 @@
                 receiverAddress: 'mn_shield-addr_test1kjwksfp8x2tachehsfvufsdl35ljg5cxzdcysjdn6ntadspyxn3qxqrxypgjm055c2azrpuyn7un0ge2vm25vkfv38d24rj3ewcku5wmdc94gjr9'
             }]);
 
+            /*
+            const zkConfigPath = path.join(contractPath, "managed", "hello-world");
+            const providers = {
+              privateStateProvider: levelPrivateStateProvider({
+    privateStateStoreName: "hello-world-state"
+  }),
+  publicDataProvider: indexerPublicDataProvider(
+    TESTNET_CONFIG.indexer,
+    TESTNET_CONFIG.indexerWS
+  ),
+  zkConfigProvider: new NodeZkConfigProvider(zkConfigPath),
+  proofProvider: httpClientProofProvider(TESTNET_CONFIG.proofServer),
+  walletProvider: walletProvider,
+  midnightProvider: walletProvider
+};
+
+const deployed: any = await findDeployedContract(providers, {
+  contractAddress: deployment.contractAddress,
+  contract: contractInstance,
+  privateStateId: "helloWorldState",
+  initialPrivateState: {}
+});
+
+const deployed: any = await findDeployedContract(providers, {
+  contractAddress: deployment.contractAddress,
+  contract: contractInstance,
+  privateStateId: "helloWorldState",
+  initialPrivateState: {}
+});
+*/
           const provenTransaction = await wallet.proveTransaction(transferRecipe);
           const submittedTransaction = await wallet.submitTransaction(provenTransaction);
           console.log('Transaction submitted:', submittedTransaction);
